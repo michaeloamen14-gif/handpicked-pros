@@ -1,13 +1,34 @@
-# Handpicked Pros
+# HandPicked Pros
 
-A simple repository for curated opportunities and recommendations.
+A directory where employers browse and book skilled tradespeople (plumbers, electricians, welders, and more), then leave a review of the service delivered.
 
-## Getting started
+## How it works
 
-This repository is currently set up as a lightweight project scaffold. You can add your source files, docs, and app code in the appropriate folders as the project grows.
+1. Employer searches by trade and location (city, state, or ZIP).
+2. Employer opens an artisan's profile and sends a booking request.
+3. Artisan accepts or declines.
+4. After the job, the employer marks it complete.
+5. The employer can then leave one review for that booking.
 
-## Repository status
+Payment happens directly between employer and artisan in version 1.
 
-- Initial project scaffold created
-- README documentation added
-- Ignore file configured for common local artifacts
+## Planned stack
+
+- Next.js, React, Tailwind CSS
+- Supabase (Postgres, Auth, Storage)
+- Vercel (hosting)
+- Resend (email notifications)
+
+## Database
+
+Run `schema.sql` in the Supabase SQL editor. Row Level Security is enabled on every table; add policies for bookings, reviews, licenses, and photos before going live.
+
+## Roadmap
+
+- [ ] Homepage with trade and location search
+- [ ] Artisan profile page
+- [ ] Booking request flow
+- [ ] Reviews
+- [ ] Admin license verification
+- [ ] Radius search (PostGIS)
+- [ ] Online payments
