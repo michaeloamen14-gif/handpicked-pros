@@ -24,17 +24,20 @@ create table artisan_profiles (
   trade_id int not null references trades(id),
   bio text,
   years_experience int check (years_experience >= 0),
-  hourly_rate numeric(8,2) check (hourly_rate >= 0),
-  city text not null,
-  state text not null,
-  zip text not null,
+  starting_rate_ngn numeric(12,2) check (starting_rate_ngn >= 0), -- in naira
+  state text not null,            -- e.g. Lagos
+  city text not null,             -- e.g. Ikeja (city or LGA)
+  area text,                      -- neighbourhood, e.g. Allen Avenue
+  postal_code text,               -- optional
+  phone text not null,
+  whatsapp text,                  -- optional, falls back to phone
   verified boolean not null default false,
   created_at timestamptz not null default now()
 );
 
 -- Search: trade + location
 create index artisan_search_idx on artisan_profiles (trade_id, state, city);
-create index artisan_zip_idx on artisan_profiles (zip);
+create index artisan_area_idx on artisan_profiles (area);
 
 create table licenses (
   id serial primary key,
@@ -86,8 +89,8 @@ create trigger reviews_require_completed
 -- Search view: verified artisans with average rating
 create view artisan_search as
 select
-  a.user_id, p.name, t.name as trade, a.city, a.state, a.zip,
-  a.hourly_rate, a.years_experience,
+  a.user_id, p.name, t.name as trade, a.state, a.city, a.area,
+  a.starting_rate_ngn, a.years_experience, a.phone, a.whatsapp,
   coalesce(avg(r.rating), 0)::numeric(3,2) as avg_rating,
   count(r.id) as review_count
 from artisan_profiles a
@@ -96,8 +99,14 @@ join trades t on t.id = a.trade_id
 left join bookings b on b.artisan_id = a.user_id
 left join reviews r on r.booking_id = b.id
 where a.verified = true
-group by a.user_id, p.name, t.name, a.city, a.state, a.zip,
-         a.hourly_rate, a.years_experience;
+group by a.user_id, p.name, t.name, a.state, a.city, a.area,
+         a.starting_rate_ngn, a.years_experience, a.phone, a.whatsapp;
+
+-- Starter trades
+insert into trades (name) values
+  ('Plumber'), ('Electrician'), ('Carpenter'), ('Welder'), ('Tiler'),
+  ('POP Ceiling Installer'), ('Generator Technician'), ('AC Technician'),
+  ('Painter'), ('Tailor'), ('Mason');
 
 -- Row Level Security: on by default, so nothing is exposed until policies exist
 alter table profiles enable row level security;
