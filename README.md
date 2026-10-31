@@ -4,7 +4,7 @@ A directory where employers browse and book skilled tradespeople (plumbers, elec
 
 ## How it works
 
-1. Employer searches by trade and location (city, state, or ZIP).
+1. Employer searches by trade and location (state, city, or area).
 2. Employer opens an artisan's profile and sends a booking request.
 3. Artisan accepts or declines.
 4. After the job, the employer marks it complete.
